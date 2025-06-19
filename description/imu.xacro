@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <joint name="imu_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="imu_link"/>
+        <origin xyz="-0.10 0 0.05" rpy="0 0 0"/>
+    </joint>
+
+    <link name="imu_link">
+        <inertial>
+            <mass value="0.031"/>
+            <inertia 
+                ixx="0.000017" 
+                ixy="0.0" 
+                ixz="0.0"
+                iyy="0.000016" 
+                iyz="0.0" 
+                izz="0.000015"/>
+        </inertial>
+    </link>
+
+    <gazebo reference="imu_link">
+        <sensor name="imu_sensor" type="imu">
+            <always_on>true</always_on>
+            <update_rate>100</update_rate>
+          <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+            <ros>
+              <remapping>~/out:=imu/data</remapping>
+            </ros>
+            <frame_name>imu_link</frame_name>
+            <custom_covariance>
+                <orientation>0.01 0 0 0 0.01 0 0 0 0.01</orientation>
+                <angular_velocity>0.001 0 0 0 0.001 0 0 0 0.001</angular_velocity>
+                <linear_acceleration>0.001 0 0 0 0.001 0 0 0 0.001</linear_acceleration>
+            </custom_covariance>
+          </plugin>
+        </sensor>
+    </gazebo>
+
+    <!-- ROS 2 Control Integration -->
+    <ros2_control name="imu_sensor" type="sensor">
+        <hardware>
+            <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+            <param name="sensor_name">imu_sensor</param>
+            <param name="topic_name">imu/data</param>
+        </hardware>
+        <sensor name="imu_sensor">
+            <state_interface name="orientation.x"/>
+            <state_interface name="orientation.y"/>
+            <state_interface name="orientation.z"/>
+            <state_interface name="orientation.w"/>
+            <state_interface name="angular_velocity.x"/>
+            <state_interface name="angular_velocity.y"/> 
+            <state_interface name="angular_velocity.z"/>
+            <state_interface name="linear_acceleration.x"/>
+            <state_interface name="linear_acceleration.y"/>
+            <state_interface name="linear_acceleration.z"/>
+            <param name="use_sim_time">true</param>
+        </sensor>
+    </ros2_control>
+
+</robot>
