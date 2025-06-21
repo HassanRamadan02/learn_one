@@ -85,12 +85,12 @@ def generate_launch_description():
         )
     )
 
-    ekf_launch = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource([
-        os.path.join(get_package_share_directory(package_name), 
-                    'launch', 'ekf_gazebo.launch.py')
-    ])
-    )
+    # ekf_launch = IncludeLaunchDescription(
+    # PythonLaunchDescriptionSource([
+    #     os.path.join(get_package_share_directory(package_name), 
+    #                 'launch', 'ekf_gazebo.launch.py')
+    # ])
+    # )
 
 
     # Code for delaying a node (I haven't tested how effective it is)
@@ -118,6 +118,6 @@ def generate_launch_description():
         twist_mux,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
-        delayed_joint_broad_spawner,
-        ekf_launch
+        delayed_joint_broad_spawner
+        # ekf_launch
     ])
